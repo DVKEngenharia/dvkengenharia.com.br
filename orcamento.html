@@ -1,0 +1,347 @@
+<title>Orçamento de Energia Solar | DVK Engenharia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Solicite seu projeto de energia solar com a DVK Engenharia. Envie sua conta de luz e receba a proposta pelo WhatsApp.">
+<meta name="theme-color" content="#0E1E35">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* Layout: página única do site; cabeçalho marinho fixo, uma pergunta por tela em coluna de 560px; no desktop vira cartão sobre fundo claro */
+:root{
+  --navy:#0E1E35;--navy2:#16304f;--sun:#E8A23A;--sun-d:#B26F12;--ink:#13202f;--ink2:#2a3a4d;--muted:#4f5e70;
+  --bg:#F3F5F8;--paper:#fff;--soft:#f6f8fb;--soft2:#eef2f6;--edge:#8a97a8;--edge2:#d3dbe5;--ok:#1f7a4d;--bad:#b3261e;
+  --display:"Fraunces",Georgia,serif;--body:"Instrument Sans",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--body)}
+.app{min-height:100%;display:flex;flex-direction:column}
+.head{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:12px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.head .in,.main{width:100%;max-width:560px;margin:0 auto}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand b{font:600 13px var(--body);letter-spacing:.06em}
+.brand a{color:#f3c47e;font-size:13px;text-decoration:none;border:1px solid #f3c47e88;padding:0 14px;min-height:38px;display:inline-flex;align-items:center;border-radius:99px}
+.bar{height:5px;border-radius:5px;background:#ffffff2a;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--sun);transition:width .3s}
+.steplbl{font:500 11.5px var(--mono);color:#c3cfdd;margin-top:8px;min-height:1.2em}
+.main{flex:1;display:flex;flex-direction:column;gap:14px;padding-block:24px calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+@media(min-width:700px){body{background:var(--bg)}.main{background:var(--paper);border-radius:18px;margin-block:28px;box-shadow:0 6px 30px rgba(14,30,53,.08);padding:32px;flex:0 0 auto;min-height:600px}}
+h1,h2{font:600 22px/1.25 var(--display);margin:0;color:var(--navy);outline:none;text-wrap:balance}
+.sub{font-size:14px;color:var(--muted);margin:0}
+.opt{font-weight:400;color:var(--muted);font-size:12.5px}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13.5px;font-weight:500;color:var(--ink2);min-width:0}
+input,select,textarea{font:16px var(--body);padding:11px 12px;border:1.5px solid var(--edge);border-radius:10px;background:#fff;color:var(--ink);min-height:48px;width:100%;box-sizing:border-box}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--sun-d);outline-offset:1px}
+[aria-invalid="true"]{border-color:var(--bad)!important}
+.err{color:var(--bad);font-size:13.5px;font-weight:500;min-height:1em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.col{flex-direction:column}
+.chip{font:500 14.5px var(--body);min-height:46px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--edge);background:#fff;color:var(--ink);cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px}
+.chips.col .chip{width:100%}
+.chip small{color:var(--muted);font-weight:400;display:block}
+.chip[aria-pressed="true"]{border-color:var(--navy);background:var(--navy);color:#fff}
+.chip[aria-pressed="true"] small{color:#c3cfdd}
+.chip.multi::before{content:"";width:18px;height:18px;border-radius:5px;border:1.5px solid currentColor;flex:none}
+.chip.multi[aria-pressed="true"]::before{content:"✓";display:grid;place-items:center;font-size:12px;background:var(--sun);color:#1c1204;border-color:var(--sun)}
+button:focus-visible,a:focus-visible,label.btn:focus-within{outline:3px solid var(--sun-d);outline-offset:2px}
+.q{display:flex;flex-direction:column;gap:8px}
+.q>span{font-size:14px;font-weight:600;color:var(--ink2)}
+.up{border:1.5px dashed var(--edge);border-radius:12px;padding:16px;text-align:center;background:var(--soft);display:flex;flex-direction:column;gap:8px;align-items:center}
+.up b{font-size:14px}.up small{color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.files{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;width:100%}
+.files li{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--ok);font-weight:600;background:#e9f5ee;border-radius:8px;padding:4px 4px 4px 10px;text-align:left}
+.files li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.x{border:0;background:none;color:var(--muted);min-width:36px;min-height:36px;cursor:pointer;font-size:16px;border-radius:8px}
+.nav{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:8px}
+.nav .r{display:flex;gap:10px}
+.btn{flex:1;font:600 15px var(--body);min-height:50px;padding:12px;border-radius:12px;border:0;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.pri{background:var(--sun);color:#1c1204}
+.sec{background:var(--soft2);color:var(--ink);flex:0 0 96px}
+.dark{background:var(--navy);color:#fff}
+.small{flex:0 0 auto;min-height:44px;padding:8px 14px;font-size:13.5px}
+.link{background:none;color:var(--navy2);text-decoration:underline;min-height:44px;padding:0;font-weight:500;font-size:14px;flex:0 0 auto;justify-content:flex-start}
+.skip{align-self:center;color:var(--muted)}
+.trust{display:flex;gap:8px;flex-wrap:wrap}
+.trust span{font:500 12px var(--body);background:var(--soft2);padding:6px 10px;border-radius:8px;color:var(--ink2)}
+.note{font-size:12.5px;color:var(--muted);margin:0;background:var(--soft);border-radius:8px;padding:10px}
+.note a{color:var(--navy2)}
+.box{border:1.5px solid var(--edge2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.box .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.box .hd b{font-size:14.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two>*{min-width:0}
+.combo{display:grid;grid-template-columns:1fr 1.25fr;gap:6px}
+.seg{display:flex;border:1.5px solid var(--edge);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:0;background:#fff;font:500 13.5px var(--body);min-height:44px;cursor:pointer;color:var(--ink)}
+.seg button+button{border-left:1.5px solid var(--edge2)}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.calc{font:500 12.5px var(--mono);color:var(--navy2);background:var(--soft2);border-radius:8px;padding:6px 10px}
+.reveal{border-left:3px solid var(--sun);padding-left:12px;display:flex;flex-direction:column;gap:10px}
+.loc{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ok);font-weight:600}
+/* Tela final */
+.done{gap:18px}
+.seal{width:64px;height:64px;border-radius:50%;background:var(--navy);display:grid;place-items:center}
+.seal svg{width:32px;height:32px}
+.seal path{stroke:var(--sun);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:0}
+@media (prefers-reduced-motion:no-preference){.seal path{animation:draw .6s .15s ease-out both}@keyframes draw{from{stroke-dashoffset:40}}}
+.proto{display:inline-flex;align-items:center;gap:8px;font:500 13px var(--mono);background:var(--soft2);padding:8px 12px;border-radius:8px;color:var(--navy);align-self:flex-start}
+.proto b{font-weight:600;letter-spacing:.03em}
+.kick{font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sun-d);margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:12px;padding-bottom:14px;position:relative}
+.steps li::before{content:attr(data-n);width:28px;height:28px;border-radius:50%;border:1.5px solid var(--navy);display:grid;place-items:center;font:600 12.5px var(--mono);color:var(--navy);background:#fff;position:relative;z-index:1}
+.steps li:first-child::before{background:var(--navy);color:#fff}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:13.5px;top:28px;bottom:0;width:1.5px;background:var(--edge2)}
+.steps b{display:block;font-size:14.5px}
+.steps span{font-size:13.5px;color:var(--muted)}
+.sum{border:1.5px solid var(--edge2);border-radius:12px;overflow:hidden}
+.sum dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding:14px;font-size:13.5px}
+.sum dt{color:var(--muted)}.sum dd{margin:0;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.sum .btn{border-radius:0;width:100%}
+.port{background:var(--navy);color:#fff;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.port h3{font:600 18px var(--display);margin:0}
+.port p{margin:0;font-size:13px;color:#c3cfdd}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.thumbs div{aspect-ratio:1;border-radius:8px;display:flex;align-items:flex-end;padding:6px;font:500 10.5px/1.25 var(--body);color:#fff;max-width:100%}
+.thumbs div:nth-child(1){background:linear-gradient(160deg,#3f6b9a,#1b3352 60%,#0b1524)}
+.thumbs div:nth-child(2){background:linear-gradient(160deg,#9a8a3f,#4e5a2a 55%,#1d2a14)}
+.thumbs div:nth-child(3){background:linear-gradient(160deg,#5f7f98,#2b3f55 55%,#121c29)}
+.port .btn{background:#fff;color:var(--navy)}
+.help{text-align:center;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.help p{margin:0;font-size:13.5px;color:var(--muted)}
+.wa{background:#e9f5ee;color:#14532d}
+.foot{text-align:center;font:500 11px var(--mono);color:#8a97a8;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+dialog{border:0;border-radius:14px;padding:0;max-width:min(560px,94vw);width:100%}
+dialog::backdrop{background:rgba(14,30,53,.55)}
+.pv{padding:18px;font-size:13px;max-height:75vh;overflow:auto}
+.pv h4{font:600 16px var(--display);margin:12px 0 4px;color:var(--navy)}
+@media (prefers-reduced-motion:no-preference){.main>*{animation:in .22s ease both}@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="app">
+  <header class="head"><div class="in">
+    <div class="brand"><b>DVK ENGENHARIA</b><a href="https://dvkengenharia.com.br/#portfolio" target="_blank" rel="noopener noreferrer">Portfólio ↗</a></div>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <div class="steplbl" id="steplbl" aria-live="polite"></div>
+  </div></header>
+  <form class="main" id="app" novalidate></form>
+  <div class="foot" id="foot">DVK Engenharia Ltda · CNPJ 32.444.951/0001-46</div>
+</div>
+<dialog id="dlg"><div class="pv" id="pv"></div><div style="padding:0 18px 18px"><button type="button" class="btn dark" style="width:100%" onclick="document.getElementById('dlg').close()">Fechar</button></div></dialog>
+
+<script>
+/* Endereço do Apps Script (Implantar > App da Web). Vazio = modo demonstração, nada é enviado. */
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwXPV3O-oAPEr4blPWNOAkq4ddNAwwRqobYqsvhRKb2wvndOaeNWRyTVQfXCXGxg4Yb/exec';
+/* ---------- estado ---------- */
+const blank=()=>({contas:[],imoveis:[],eq:{},ev:{tipo:'100% elétrico',qtd:'1',uso:'recargas',carregador:''},foto:[],skipped:[]});
+const S={step:0,hist:[],a:blank()};
+const app=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const A=()=>S.a;
+const EQ=['Ar-condicionado','Carro elétrico','Piscina / bomba','Chuveiro ou aquecedor elétrico','Bomba d\'água / irrigação','Freezer / câmara fria','Forno ou cooktop elétrico','Motor / máquina','Ampliação do imóvel','Outro'];
+/* bateria de referência (kWh); conferir antes de publicar */
+const EV={'BYD Dolphin Mini':[38,'100% elétrico'],'BYD Dolphin':[44.9,'100% elétrico'],'BYD Yuan Plus':[60.5,'100% elétrico'],'BYD Seal':[82.5,'100% elétrico'],'BYD Song Plus (híbrido)':[18.3,'Híbrido plug-in'],'GWM Ora 03':[63,'100% elétrico'],'Volvo EX30':[69,'100% elétrico'],'Renault Kwid E-Tech':[26.8,'100% elétrico']};
+const PER={dia:30,semana:4.3,'mês':1};
+let uid=0;
+const comOuRural=()=>A().tipo==='Comércio / empresa'||A().tipo==='Rural / fazenda';
+
+/* ---------- componentes ---------- */
+const group=(label,inner)=>{const id='g'+(++uid);return `<div class="q" role="group" aria-labelledby="${id}"><span id="${id}">${label}</span>${inner}</div>`};
+const chips=(key,opts,{col,auto}={})=>`<div class="chips${col?' col':''}">${opts.map(o=>{const[t,s]=Array.isArray(o)?o:[o];return `<button type="button" class="chip" data-k="${key}" data-v="${esc(t)}"${auto?' data-auto="1"':''} aria-pressed="${A()[key]===t}">${s?`<span>${t}<small>${s}</small></span>`:t}</button>`}).join('')}</div>`;
+function upload(path,title,sub,multi=true){const list=get(path)||[];const id='f'+(++uid);
+ return `<div class="up"><b>${title}</b><small>${sub}</small><div class="row">
+ <label class="btn dark small">📷 Tirar foto<input type="file" accept="image/*" capture="environment" data-file="${path}" hidden></label>
+ <label class="btn dark small">${list.length?'Adicionar arquivo':'Escolher arquivo'}<input type="file" accept="image/*,application/pdf" ${multi?'multiple':''} data-file="${path}" hidden></label></div>
+ ${list.length?`<ul class="files">${list.map((n,i)=>`<li><span>✓ ${esc(n.name)}</span><button type="button" class="x" aria-label="Remover ${esc(n.name)}" data-rmfile="${path}|${i}">✕</button></li>`).join('')}</ul>`:''}</div>`}
+function get(path){return path.split('.').reduce((o,k)=>o?.[k],A())}
+function set(path,val){const ks=path.split('.');let o=A();ks.slice(0,-1).forEach(k=>o=o[k]);o[ks.at(-1)]=val}
+const nav=({label='Continuar',back=true,skip=false,submit=true}={})=>`<span class="err" id="e" role="alert"></span><div class="nav"><div class="r">${back?'<button type="button" class="btn sec" data-back="1">Voltar</button>':''}${submit?`<button type="submit" class="btn pri">${label}</button>`:''}</div>${skip?'<button type="button" class="btn link skip" data-skip="1">Pular esta pergunta</button>':''}</div>`;
+const val=k=>esc(A()[k]);
+
+/* ---------- telas ---------- */
+const V=[
+{l:'Leva cerca de 3 minutos',h:()=>`<p class="kick">Orçamento de energia solar</p><h1 tabindex="-1">Vamos preparar seu projeto de energia solar?</h1><p class="sub">Responda algumas perguntas rápidas e envie sua conta de luz. Um engenheiro da DVK analisa e devolve a proposta pelo WhatsApp.</p><div class="trust"><span>ART em todo projeto</span><span>Desde 2019</span><span>279 kWp instalados</span></div><p class="note">Só 4 respostas são obrigatórias. As demais você pode pular.</p>${nav({label:'Começar',back:false})}`},
+
+{l:'Seu imóvel',h:()=>`<h1 tabindex="-1">Onde vai ser a instalação?</h1>${chips('tipo',[['Residência','Casa ou apartamento'],['Comércio / empresa','Loja, escritório, indústria'],['Rural / fazenda','Sítio, fazenda, irrigação'],['Condomínio','Áreas comuns']],{col:1,auto:!comOuRural()})}${comOuRural()?`<div class="reveal">${group('A conta é de alta tensão (Grupo A)? <span class="opt">(opcional)</span>',chips('grupoA',['Sim','Não','Não sei']))}${A().tipo==='Rural / fazenda'?group('Tem rede da concessionária no local? <span class="opt">(opcional)</span>',chips('rede',['Sim','Não, preciso de sistema isolado','Não sei'])):''}</div>${nav()}`:nav({submit:false})}`,
+ ok:a=>a.tipo?'':'Escolha o tipo de imóvel.'},
+
+{l:'Seu imóvel',h:()=>{const a=A();return `<h1 tabindex="-1">Qual o CEP do imóvel?</h1><p class="sub">Com ele identificamos a concessionária e a incidência de sol na região.</p>${a.semcep?`<label class="f">Cidade<input id="cidade" autocomplete="address-level2" value="${val('cidade')}"></label>`:`<label class="f">CEP<input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="42700-000" value="${val('cep')}"></label><button type="button" class="btn link" data-tgl="semcep">Imóvel rural sem CEP? Informe a cidade</button>`}
+ <div class="box"><div class="hd"><b>📍 Localização do imóvel <span class="opt">(opcional)</span></b></div><p class="sub" style="font-size:13px">Ajuda nossa engenharia a analisar o telhado por satélite antes da visita.</p>
+ ${a.loc?`<div class="loc">✓ Localização recebida <button type="button" class="x" aria-label="Remover localização" data-rmloc="1">✕</button></div>`:a.longe?`<p class="sub" style="font-size:13px">Sem problema, seguimos pelo CEP.</p><button type="button" class="btn link" data-tgl="longe">Estou no imóvel agora</button>`:`<div class="row" style="justify-content:flex-start"><button type="button" class="btn dark small" data-geo="1">Enviar minha localização</button><button type="button" class="btn link" data-tgl="longe">Não estou no local</button></div>`}
+ <span class="err" id="geoe" role="status"></span></div>${nav()}`},
+ ok:a=>{if(a.semcep)return (a.cidade||'').trim().length>1||a.loc?'':['Informe a cidade do imóvel.','cidade'];return (a.cep||'').replace(/\D/g,'').length===8?'':['O CEP tem 8 números, ex.: 42700-000.','cep']}},
+
+{l:'Sua conta de luz',h:()=>`<h1 tabindex="-1">Envie sua conta de luz</h1><p class="sub">É com ela que dimensionamos o sistema. Pode enviar mais de uma, por exemplo meses diferentes ou mais de uma unidade no mesmo endereço.</p>${A().semconta?`<label class="f">Consumo médio por mês <span class="opt">(aparece na conta, em kWh)</span><input id="kwh" inputmode="numeric" value="${val('kwh')}" placeholder="ex.: 650"></label><button type="button" class="btn link" data-tgl="semconta">Tenho a conta, vou enviar</button>`:`${upload('contas','Foto ou PDF da conta','JPG, PNG ou PDF, até 10 MB cada')}<button type="button" class="btn link" data-tgl="semconta">Estou sem a conta, vou informar o consumo</button>`}<p class="note">🔒 Sua conta e seus dados servem só para este orçamento. Vão direto para a equipe técnica da DVK e não ficam no site. <a href="privacidade.html" target="_blank" rel="noopener">Política de privacidade</a></p>${nav()}`,
+ ok:a=>a.semconta?(+a.kwh>=30&&+a.kwh<=100000?'':['Informe um consumo entre 30 e 100.000 kWh por mês.','kwh']):(a.contas.length?'':'Falta a conta de luz. Envie uma foto ou informe o consumo em kWh.')},
+
+{l:'Seu contato',h:()=>`<h1 tabindex="-1">Para quem enviamos a proposta?</h1><label class="f">Nome<input id="nome" autocomplete="name" value="${val('nome')}"></label><label class="f">WhatsApp<input id="tel" inputmode="tel" autocomplete="tel" placeholder="(71) 9 8888-7777" value="${val('tel')}"></label><label class="f">E-mail <span class="opt">(opcional, se quiser a proposta também por e-mail)</span><input id="mail" type="email" inputmode="email" autocomplete="email" value="${val('mail')}"></label>${nav()}`,
+ ok:a=>{if(!a.nome||a.nome.trim().length<2)return['Digite seu nome para sabermos como chamar você.','nome'];const d=(a.tel||'').replace(/\D/g,'');if(d.length!==11||d[2]!=='9')return['Número incompleto. Use DDD + 9 dígitos, ex.: (71) 9 8888-7777.','tel'];if(a.mail&&!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(a.mail))return['Este e-mail parece incompleto. Confira o @ e o domínio.','mail'];return''}},
+
+{l:'Outros imóveis',skippable:1,h:()=>{const a=A();return `<h1 tabindex="-1">Quer usar a energia gerada para abater a conta de outro imóvel também?</h1><p class="sub">Precisa ser da mesma concessionária e no mesmo CPF ou CNPJ.</p>${chips('comp',['Sim','Não'],{auto:a.comp!=='Sim'})}${a.comp==='Sim'?`${a.imoveis.map((m,i)=>`<div class="box"><div class="hd"><b>Imóvel ${i+2}</b>${a.imoveis.length>1?`<button type="button" class="btn link" data-rmim="${i}">Remover</button>`:''}</div>
+ <label class="f">Apelido <span class="opt">(opcional)</span><input data-im="${i}|apelido" value="${esc(m.apelido)}" placeholder="ex.: Casa da praia"></label>
+ <div class="seg" role="group" aria-label="Como informar o consumo do imóvel ${i+2}"><button type="button" data-immodo="${i}|conta" aria-pressed="${m.modo==='conta'}">Enviar conta</button><button type="button" data-immodo="${i}|kwh" aria-pressed="${m.modo==='kwh'}">Informar consumo</button></div>
+ ${m.modo==='conta'?upload(`imoveis.${i}.files`,'Conta deste imóvel','Pode enviar várias'):`<label class="f">Consumo médio por mês (kWh)<input inputmode="numeric" data-im="${i}|kwh" value="${esc(m.kwh)}" placeholder="ex.: 300"></label>`}</div>`).join('')}
+ <button type="button" class="btn link" data-addim="1">+ Adicionar outro imóvel</button>${nav({skip:1})}`:nav({submit:false,skip:1})}`},
+ ok:a=>{if(!a.comp)return 'Escolha Sim ou Não, ou pule esta pergunta.';if(a.comp==='Não')return '';const okk=a.imoveis.some(m=>m.modo==='conta'?m.files.length:+m.kwh>0);return okk?'':'Envie a conta ou informe o consumo de ao menos um imóvel.'}},
+
+{l:'Seu consumo',skippable:1,h:()=>`<h1 tabindex="-1">Pretende comprar algo que gaste mais energia nos próximos meses?</h1><p class="sub">Assim o sistema já nasce no tamanho certo.</p>${chips('novo',['Sim','Não'],{auto:1})}${nav({submit:false,skip:1})}`,
+ ok:a=>a.novo?'':'Escolha Sim ou Não, ou pule esta pergunta.'},
+
+{l:'Seu consumo',skippable:1,skip:a=>a.novo!=='Sim',h:()=>{const a=A();const sel=Object.keys(a.eq);return `<h1 tabindex="-1">O que vai instalar?</h1><p class="sub">Marque quantos quiser.</p><div class="chips" role="group" aria-label="Equipamentos">${EQ.map(e=>`<button type="button" class="chip multi" data-eq="${esc(e)}" aria-pressed="${!!a.eq[e]}">${e}</button>`).join('')}</div>
+ ${sel.map(e=>e==='Carro elétrico'?evBox():eqBox(e)).join('')}${nav({skip:1})}`},
+ ok:a=>Object.keys(a.eq).length?'':'Marque ao menos um equipamento, ou pule esta pergunta.'},
+
+{l:'Seu telhado',skippable:1,h:()=>`<h1 tabindex="-1">Como é o telhado?</h1>${group('Tipo de telha',chips('cob',['Cerâmica','Fibrocimento (Eternit)','Metálica','Laje','Outra','Não sei']))}${group('Há árvores, prédios ou caixa d\'água fazendo sombra?',chips('sombra',['Sim','Não','Não sei']))}${upload('foto','Foto do telhado <span class="opt">(opcional)</span>','Ajuda a avaliar área e orientação')}${nav({skip:1})}`},
+
+{l:'Planejamento',skippable:1,h:()=>`<h1 tabindex="-1">Quando e como pretende fazer?</h1><p class="sub">Opcional, mas nos ajuda a preparar a proposta certa.</p>${group('Quando pretende instalar?',chips('prazo',['Até 3 meses','3 a 6 meses','Só pesquisando']))}${group('Como pretende pagar?',chips('pag',['Recursos próprios','Financiamento','Quero simular os dois']))}${nav({skip:1})}`},
+
+{l:'Última etapa',skippable:1,h:()=>`<h1 tabindex="-1">Última etapa</h1>${group('Como conheceu a DVK?',chips('orig',['Google','Instagram','Propaganda','Indicação','Outro']))}${A().orig==='Indicação'?`<div class="reveal"><label class="f">Quem indicou? <span class="opt">(opcional)</span><input id="ind" value="${val('ind')}"></label></div>`:''}<label class="f">Observações <span class="opt">(opcional)</span><textarea id="obs" rows="3">${esc(A().obs)}</textarea></label><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">${nav({label:'Enviar solicitação'})}`},
+
+{l:'Solicitação enviada',h:doneView}
+];
+const LAST=V.length-1, TOTAL=LAST-1;
+
+function eqBox(e){const m=A().eq[e];return `<div class="box"><div class="hd"><b>${esc(e)}</b></div>${e==='Outro'?`<label class="f">Qual equipamento?<input data-eqf="${esc(e)}|nome" value="${esc(m.nome)}"></label>`:''}
+ <div class="two"><label class="f">Quantidade<input inputmode="numeric" data-eqf="${esc(e)}|qtd" value="${esc(m.qtd)}" placeholder="1"></label>
+ <label class="f">Tempo de uso<div class="combo"><input inputmode="decimal" aria-label="Horas de uso de ${esc(e)}" data-eqf="${esc(e)}|t" value="${esc(m.t)}" placeholder="horas"><select aria-label="Período de uso de ${esc(e)}" data-eqf="${esc(e)}|per">${Object.keys(PER).map(p=>`<option ${m.per===p?'selected':''}>${p}</option>`).join('')}</select></div></label></div>
+ ${+m.t>0?`<span class="calc">≈ ${Math.round(+m.t*PER[m.per]*(+m.qtd||1))} h/mês no total</span>`:''}</div>`}
+function evKwh(){const v=A().ev;const q=+v.qtd||1;if(v.uso==='recargas'&&+v.recargas>0&&+v.bat>0)return Math.round(v.recargas*v.bat*1.1*q);if(v.uso==='km'&&+v.km>0)return Math.round(v.km*0.16*q);return 0}
+function evBox(){const v=A().ev;const k=evKwh();return `<div class="box"><div class="hd"><b>Carro elétrico</b></div>
+ <label class="f">Modelo<select data-ev="modelo"><option value="">Selecione</option>${Object.keys(EV).map(m=>`<option ${v.modelo===m?'selected':''}>${m}</option>`).join('')}<option ${v.modelo==='Outro'?'selected':''}>Outro</option></select></label>
+ ${v.modelo==='Outro'?`<label class="f">Qual modelo?<input data-ev="outro" value="${esc(v.outro)}"></label>`:''}
+ <div class="seg" role="group" aria-label="Tipo de carro">${['100% elétrico','Híbrido plug-in'].map(t=>`<button type="button" data-evset="tipo|${t}" aria-pressed="${v.tipo===t}">${t}</button>`).join('')}</div>
+ <div class="two"><label class="f">Bateria (kWh)<input inputmode="decimal" data-ev="bat" value="${esc(v.bat)}" placeholder="não sei"></label><label class="f">Quantos carros<input inputmode="numeric" data-ev="qtd" value="${esc(v.qtd)}"></label></div>
+ <div class="seg" role="group" aria-label="Como informar o uso">${[['recargas','Recargas por mês'],['km','Km por mês']].map(([k2,t])=>`<button type="button" data-evset="uso|${k2}" aria-pressed="${v.uso===k2}">${t}</button>`).join('')}</div>
+ ${v.uso==='recargas'?`<label class="f">Recargas completas por mês<input inputmode="numeric" data-ev="recargas" value="${esc(v.recargas)}" placeholder="ex.: 4"></label>`:`<label class="f">Quantos km roda por mês<input inputmode="numeric" data-ev="km" value="${esc(v.km)}" placeholder="ex.: 1200"></label>`}
+ ${group('Carregador em casa',`<div class="chips">${['Wallbox (parede)','Tomada comum','Ainda não tenho'].map(c=>`<button type="button" class="chip" data-evset="carregador|${c}" aria-pressed="${v.carregador===c}">${c}</button>`).join('')}</div>`)}
+ ${k?`<span class="calc">≈ ${k} kWh/mês para recarga (estimativa)</span>`:''}</div>`}
+
+/* ---------- tela final ---------- */
+function doneView(){const a=A();const nome=esc((a.nome||'').trim().split(' ')[0]);
+ return `<div class="done" style="display:flex;flex-direction:column">
+ <div class="seal" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 16.5l5.2 5.2L24 10.5"/></svg></div>
+ <h1 tabindex="-1">Tudo certo, ${nome}. Recebemos sua solicitação.</h1>
+ <div class="proto">Protocolo <b>${a.proto}</b></div>
+ <div><p class="kick" style="margin-bottom:10px">O que acontece agora</p><ol class="steps">
+  <li data-n="1"><div><b>Análise da conta</b><span>Nossa engenharia avalia seu consumo e o perfil do imóvel.</span></div></li>
+  <li data-n="2"><div><b>Pré-projeto</b><span>Dimensionamento do sistema e simulação de geração.</span></div></li>
+  <li data-n="3"><div><b>Proposta no seu WhatsApp</b><span>Em até 2 dias úteis, no ${esc(a.tel)}.</span></div></li></ol></div>
+ <div class="sum"><dl>${summaryRows().slice(0,5).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl><button type="button" class="btn dark" data-pdf="1">⬇ Baixar resumo da solicitação (PDF)</button></div>
+ <div class="port"><p class="kick" style="color:#f3c47e">Portfólio DVK</p><h3>Conheça obras que já entregamos</h3><p>9 projetos · 279 kWp instalados · todos com ART e homologação</p>
+  <div class="thumbs"><div>Praia do Forte<br>34 kWp</div><div>Fazenda Coqueiro<br>68 kWp</div><div>Usina Santo Amaro<br>105 kWp</div></div>
+  <a class="btn" href="https://dvkengenharia.com.br/#portfolio" target="_blank" rel="noopener noreferrer">Ver portfólio completo ↗</a></div>
+ <div class="help"><p>Ficou alguma dúvida?</p><a class="btn wa" href="https://wa.me/5571992889284?text=${encodeURIComponent('Olá, enviei a solicitação '+a.proto+' pelo site da DVK.')}" target="_blank" rel="noopener noreferrer">Falar com a engenharia no WhatsApp</a></div>
+ <button type="button" class="btn link skip" data-reset="1">Reiniciar protótipo</button></div>`}
+
+/* ---------- resumo (tela final, PDF) ---------- */
+function summaryRows(){const a=A();const sk=k=>a.skipped.includes(k);const r=[];
+ r.push(['Imóvel',[a.tipo,a.grupoA&&('Grupo A: '+a.grupoA),a.rede&&('Rede: '+a.rede)].filter(Boolean).join(' · ')]);
+ r.push(['Local',[a.semcep?a.cidade:a.cep,a.loc&&'localização enviada'].filter(Boolean).join(' · ')]);
+ r.push(['Consumo',a.semconta?a.kwh+' kWh/mês (informado)':a.contas.length+' conta(s) enviada(s)']);
+ r.push(['Contato',[a.nome,a.tel].join(' · ')]);
+ r.push(['Arquivos',String(a.contas.length+a.imoveis.reduce((s,m)=>s+(m.modo==='conta'?m.files.length:0),0)+a.foto.length)]);
+ r.push(['E-mail',a.mail||'não informado']);
+ r.push(['Outros imóveis',sk(5)?'não informado':a.comp==='Sim'?a.imoveis.map((m,i)=>`${m.apelido||'Imóvel '+(i+2)}: ${m.modo==='conta'?m.files.length+' conta(s)':m.kwh+' kWh/mês'}`).join('; '):(a.comp||'não informado')]);
+ r.push(['Aumento de consumo',sk(6)||sk(7)?'não informado':a.novo==='Sim'?Object.keys(a.eq).map(e=>{if(e==='Carro elétrico'){const v=a.ev,k=evKwh();return `Carro elétrico: ${v.modelo==='Outro'?v.outro:v.modelo||'modelo não informado'} (${v.tipo}), ${v.qtd} un., ${v.uso==='recargas'?(v.recargas||'?')+' recargas/mês':(v.km||'?')+' km/mês'}${k?`, ≈${k} kWh/mês`:''}, carregador: ${v.carregador||'não informado'}`}const m=a.eq[e];return `${e==='Outro'?m.nome||'Outro':e}: ${m.qtd||1} un., ${m.t?m.t+' h por '+m.per:'uso não informado'}`}).join('; '):(a.novo||'não informado')]);
+ r.push(['Telhado',sk(8)?'não informado':[a.cob&&'Telha: '+a.cob,a.sombra&&'Sombra: '+a.sombra,a.foto.length&&a.foto.length+' foto(s)'].filter(Boolean).join(' · ')||'não informado']);
+ r.push(['Prazo',a.prazo||'não informado']);r.push(['Pagamento',a.pag||'não informado']);
+ r.push(['Como conheceu',[a.orig,a.ind&&'indicação de '+a.ind].filter(Boolean).join(' · ')||'não informado']);
+ r.push(['Observações',a.obs||'nenhuma']);return r}
+function filesList(){const a=A();return [...a.contas.map(n=>'Conta principal: '+n.name),...a.imoveis.flatMap((m,i)=>m.modo==='conta'?m.files.map(n=>`${m.apelido||'Imóvel '+(i+2)}: ${n.name}`):[]),...a.foto.map(n=>'Telhado: '+n.name)]}
+function makePdf(){const a=A();
+ if(!window.jspdf){previewPdf();return}
+ const {jsPDF}=window.jspdf;const d=new jsPDF({unit:'mm',format:'a4'});const W=210,M=18;let y=0;
+ d.setFillColor(14,30,53);d.rect(0,0,W,32,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(15);d.text('DVK ENGENHARIA',M,14);
+ d.setFont('helvetica','normal');d.setFontSize(9);d.text('Engenharia elétrica e energia solar · Lauro de Freitas, BA · CNPJ 32.444.951/0001-46',M,21);d.text('WhatsApp (71) 9 9288-9284 · comercial@dvkengenharia.com.br',M,26);
+ d.setTextColor(19,32,47);d.setFont('helvetica','bold');d.setFontSize(14);y=44;d.text('Solicitação de orçamento de energia solar',M,y);
+ d.setFont('helvetica','normal');d.setFontSize(10);y+=7;d.text(`Protocolo ${a.proto} · enviado em ${a.when}`,M,y);y+=8;
+ d.setDrawColor(232,162,58);d.setLineWidth(.6);d.line(M,y,W-M,y);y+=8;
+ const row=(k,v)=>{d.setFont('helvetica','bold');d.setFontSize(9.5);d.setTextColor(79,94,112);d.text(k,M,y);d.setFont('helvetica','normal');d.setTextColor(19,32,47);const lines=d.splitTextToSize(String(v),W-M*2-48);d.text(lines,M+48,y);y+=Math.max(6,lines.length*4.6+1.6);if(y>270){d.addPage();y=20}};
+ summaryRows().forEach(([k,v])=>row(k,v));
+ const fl=filesList();if(fl.length){y+=4;d.setFont('helvetica','bold');d.setFontSize(11);d.text('Arquivos enviados',M,y);y+=6;fl.forEach(f=>row('',f))}
+ y+=6;if(y>250){d.addPage();y=20}d.setFillColor(243,245,248);d.roundedRect(M,y,W-M*2,24,3,3,'F');d.setFont('helvetica','bold');d.setFontSize(10);d.text('Próximos passos',M+5,y+7);d.setFont('helvetica','normal');d.setFontSize(9.5);
+ d.text(d.splitTextToSize('Nossa engenharia analisa seu consumo, faz o pré-projeto e envia a proposta pelo WhatsApp em até 2 dias úteis. Cite o protocolo ao falar conosco.',W-M*2-10),M+5,y+13);
+ d.setFontSize(8);d.setTextColor(79,94,112);d.text(d.splitTextToSize('Seus dados e documentos são usados apenas para elaborar este orçamento, ficam em armazenamento privado e são excluídos em 12 meses caso o projeto não seja contratado (LGPD).',W-M*2),M,285);
+ try{d.save(`DVK-solicitacao-${a.proto}.pdf`)}catch(_){previewPdf()}
+ previewPdf(true)}
+function previewPdf(onlyIfBlocked){/* dentro de ambientes que bloqueiam download, mostra a prévia */
+ if(onlyIfBlocked&&!/claude|claudeusercontent/.test(location.hostname))return;
+ const a=A();document.getElementById('pv').innerHTML=`<p class="kick">Prévia do PDF · o download funciona no site</p><h4>Solicitação ${a.proto}</h4><p class="sub">${esc(a.when)}</p>${summaryRows().map(([k,v])=>`<p style="margin:6px 0"><b>${k}:</b> ${esc(v)}</p>`).join('')}${filesList().length?`<h4>Arquivos enviados</h4>${filesList().map(f=>`<p style="margin:4px 0">${esc(f)}</p>`).join('')}`:''}`;
+ const dl=document.getElementById('dlg');try{dl.showModal()}catch(_){dl.setAttribute('open','')}}
+
+/* ---------- motor ---------- */
+function save(){const a=A();
+ app.querySelectorAll('input[id],textarea[id]').forEach(i=>{if(i.type!=='file')a[i.id]=i.value});
+ app.querySelectorAll('[data-eqf]').forEach(i=>{const[e,k]=i.dataset.eqf.split('|');if(a.eq[e])a.eq[e][k]=i.value});
+ app.querySelectorAll('[data-im]').forEach(i=>{const[n,k]=i.dataset.im.split('|');if(a.imoveis[n])a.imoveis[n][k]=i.value});
+ app.querySelectorAll('[data-ev]').forEach(i=>{a.ev[i.dataset.ev]=i.value})}
+function render(){uid=0;app.innerHTML=V[S.step].h();
+ document.getElementById('bar').style.width=Math.round(Math.min(S.step,TOTAL)/TOTAL*100)+'%';
+ document.getElementById('steplbl').textContent=S.step&&S.step<LAST?`${V[S.step].l} · ${S.step} de ${TOTAL}`:V[S.step].l;
+ const h=app.querySelector('h1');if(h&&S.started)h.focus({preventScroll:false});
+ const t=app.querySelector('#tel');if(t)t.addEventListener('input',()=>{const d=t.value.replace(/\D/g,'').slice(0,11);let o=d;if(d.length>2)o=`(${d.slice(0,2)}) ${d.slice(2,3)}${d.length>3?' '+d.slice(3,7):''}${d.length>7?'-'+d.slice(7):''}`;t.value=o});
+ const c=app.querySelector('#cep');if(c)c.addEventListener('input',()=>{const d=c.value.replace(/\D/g,'').slice(0,8);c.value=d.length>5?d.slice(0,5)+'-'+d.slice(5):d});
+ if(S.started)window.scrollTo({top:0})}
+function go(n){S.started=1;S.step=n;render()}
+function next(){let n=S.step+1;while(V[n]&&V[n].skip&&V[n].skip(A()))n++;S.hist.push(S.step);
+ const a=A();a.skipped=a.skipped.filter(x=>x!==S.step);
+ if(n===LAST&&!a.proto){a.proto='DVK-'+new Date().getFullYear()+'-'+String(Math.floor(1000+Math.random()*9000));a.when=new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}
+ go(n)}
+function check(){save();const v=V[S.step];if(!v.ok)return true;let r=v.ok(A()),fld;if(Array.isArray(r)){fld=r[1];r=r[0]}
+ app.querySelectorAll('[aria-invalid]').forEach(i=>i.removeAttribute('aria-invalid'));
+ const e=app.querySelector('#e');if(e)e.textContent=r;if(r&&fld){const i=app.querySelector('#'+fld);if(i){i.setAttribute('aria-invalid','true');i.setAttribute('aria-describedby','e');i.focus()}}return !r}
+app.addEventListener('submit',e=>{e.preventDefault();if(!check())return;if(S.step===LAST-1)enviar();else next()});
+app.addEventListener('change',e=>{const i=e.target;
+ if(i.dataset.file){const big=[...i.files].filter(f=>f.size>10*1024*1024&&!/^image\//.test(f.type));const ok=[...i.files].filter(f=>!big.includes(f)).map(f=>({name:f.name,file:f}));save();const list=get(i.dataset.file)||[];set(i.dataset.file,list.concat(ok));render();if(big.length){const e=app.querySelector('#e');if(e)e.textContent='O PDF '+big[0].name+' passa de 10 MB. Envie uma foto da conta.'}return}
+ if(i.dataset.ev==='modelo'){save();const m=EV[i.value];if(m){A().ev.bat=String(m[0]);A().ev.tipo=m[1]}render();return}
+ if(i.dataset.eqf&&i.tagName==='SELECT'){save();render();return}});
+app.addEventListener('input',e=>{const i=e.target;if(i.dataset.eqf||i.dataset.ev){save();const box=i.closest('.box');const calc=box&&box.querySelector('.calc');
+ const k=i.dataset.ev?evKwh():(()=>{const[n]=i.dataset.eqf.split('|');const m=A().eq[n];return +m.t>0?Math.round(+m.t*PER[m.per]*(+m.qtd||1)):0})();
+ const txt=k?(i.dataset.ev?`≈ ${k} kWh/mês para recarga (estimativa)`:`≈ ${k} h/mês no total`):'';
+ if(calc){calc.textContent=txt;calc.hidden=!k}else if(k&&box){const s=document.createElement('span');s.className='calc';s.textContent=txt;box.appendChild(s)}}});
+app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.type==='submit')return;e.preventDefault();save();const d=b.dataset,a=A();
+ if(d.back){go(S.hist.pop()??0);return}
+ if(d.skip){if(!a.skipped.includes(S.step))a.skipped.push(S.step);let n=S.step+1;while(V[n]&&V[n].skip&&V[n].skip(a)&&n!==7)n++;if(S.step===6)n=8;S.hist.push(S.step);go(n);return}
+ if(d.reset){S.a=blank();S.hist=[];go(0);return}
+ if(d.pdf){makePdf();return}
+ if(d.k){a[d.k]=d.v;if(d.k==='tipo'&&!comOuRural()){delete a.grupoA;delete a.rede}if(d.k==='tipo'&&a.tipo!=='Rural / fazenda')delete a.rede;
+  if(d.k==='novo'&&d.v==='Não')a.eq={};
+  if(d.k==='comp'&&d.v==='Sim'&&!a.imoveis.length)a.imoveis.push({apelido:'',modo:'conta',files:[],kwh:''});
+  if(d.auto&&!(d.k==='tipo'&&comOuRural())&&!(d.k==='comp'&&d.v==='Sim')){render();setTimeout(()=>{if(check())next()},160);return}
+  render();return}
+ if(d.eq){if(a.eq[d.eq])delete a.eq[d.eq];else a.eq[d.eq]={qtd:'',t:'',per:'dia'};render();return}
+ if(d.evset){const[k,v]=d.evset.split('|');a.ev[k]=v;render();return}
+ if(d.rmfile){const[p,i]=d.rmfile.split('|');const l=get(p);l.splice(+i,1);render();return}
+ if(d.addim){a.imoveis.push({apelido:'',modo:'conta',files:[],kwh:''});render();return}
+ if(d.rmim!==undefined){a.imoveis.splice(+d.rmim,1);render();return}
+ if(d.immodo){const[i,m]=d.immodo.split('|');a.imoveis[i].modo=m;render();return}
+ if(d.tgl){a[d.tgl]=!a[d.tgl];render();return}
+ if(d.rmloc){a.loc=null;render();return}
+ if(d.geo){const ge=app.querySelector('#geoe');ge.textContent='Obtendo localização…';
+  const sim=()=>{a.loc={lat:-12.8975,lng:-38.3274,sim:1};render();const g=app.querySelector('#geoe');if(g)g.textContent='Neste ambiente de teste a localização foi simulada.'};
+  if(!navigator.geolocation){sim();return}
+  navigator.geolocation.getCurrentPosition(p=>{a.loc={lat:p.coords.latitude,lng:p.coords.longitude};render()},err=>{if(err.code===1&&!/claude|claudeusercontent/.test(location.hostname)){ge.textContent='Permissão negada. Sem problema, seguimos pelo CEP.'}else sim()},{enableHighAccuracy:true,timeout:10000});return}});
+try{const o=new URLSearchParams(location.search).get('origem');const m={google:'Google',instagram:'Instagram',indicacao:'Indicação'}[(o||'').toLowerCase()];if(m)S.a.orig=m}catch(_){}
+/* ---------- envio ---------- */
+function encolher(file){return new Promise(res=>{
+ if(!/^image\/(jpeg|png|webp)$/.test(file.type)){const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>res(null);r.readAsDataURL(file);return}
+ const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const k=Math.min(1,2000/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.82).split(',')[1])};img.onerror=()=>{URL.revokeObjectURL(u);res(null)};img.src=u})}
+function dadosEnvio(){const a=A(),r=Object.fromEntries(summaryRows());const sk=n=>a.skipped.includes(n);
+ return {nome:a.nome,telefone:a.tel,email:a.mail||'',tipo:a.tipo,grupoA:a.grupoA||'',rede:a.rede||'',cep:a.semcep?'':a.cep,cidade:a.semcep?a.cidade:'',
+  lat:a.loc&&!a.loc.sim?a.loc.lat:'',lng:a.loc&&!a.loc.sim?a.loc.lng:'',kwh:a.semconta?a.kwh:'',qtdContas:a.semconta?0:a.contas.length,
+  outrosImoveis:r['Outros imóveis'],aumento:r['Aumento de consumo'],telha:sk(8)?'':a.cob||'',sombra:sk(8)?'':a.sombra||'',
+  prazo:a.prazo||'',pagamento:a.pag||'',origem:a.orig||'',indicacao:a.ind||'',observacoes:a.obs||'',
+  pulou:a.skipped.map(n=>V[n].l).join(', '),origemLink:location.search.slice(0,200)}}
+async function enviar(){const a=A();const b=app.querySelector('button[type=submit]'),e=app.querySelector('#e');
+ if(!SCRIPT_URL){next();return}
+ b.disabled=true;b.textContent='Enviando…';e.textContent='';
+ try{const grupos=[...a.contas.map(f=>['conta',f]),...(a.comp==='Sim'?a.imoveis.flatMap((m,i)=>m.modo==='conta'?m.files.map(f=>['imovel',f,m.apelido||'Imóvel '+(i+2)]):[]):[]),...a.foto.map(f=>['telhado',f])];
+  const arquivos=[];for(const[g,f,rot]of grupos){if(!f.file)continue;b.textContent=`Enviando arquivos (${arquivos.length+1}/${grupos.length})…`;const data=await encolher(f.file);if(data)arquivos.push({grupo:g,rotulo:rot||'',data})}
+  b.textContent='Registrando…';
+  const resp=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({website:a.website||'',dados:dadosEnvio(),arquivos})});
+  const j=await resp.json();if(!j.ok)throw new Error(j.erro||'Falha no envio');
+  a.proto=j.proto;a.when=j.quando||new Date().toLocaleString('pt-BR');next()}
+ catch(err){b.disabled=false;b.textContent='Tentar de novo';e.innerHTML=esc(err.message&&!/fetch|network|json/i.test(err.message)?err.message:'Não conseguimos enviar agora. Confira sua internet e tente de novo.')+` Se preferir, <a href="https://wa.me/5571992889284" target="_blank" rel="noopener">fale conosco pelo WhatsApp</a>.`}}
+if(!SCRIPT_URL)document.getElementById('foot').textContent='Modo demonstração · nada é enviado à DVK';
+render();
+</script>
