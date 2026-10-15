@@ -419,18 +419,19 @@ function fimView(){const a=A();return `<div class="screen wrap"><div class="big-
  </div>`}
 
 /* ===== comunicação com o servidor ===== */
-let fila=Promise.resolve(),pend=0;
+let filaArq=Promise.resolve(),emVoo=null,sujo=false,fechando=false;
 function status(t,c){const s=document.getElementById('saved');if(!s)return;S.saved=t;s.className='saved '+(c||'');s.innerHTML=t}
-function post(body){
+function post(body,ms=45000){
  if(DEMO)return new Promise(r=>setTimeout(()=>r({ok:true,proto:S.proto||'DVK-2026-DEMO',quando:new Date().toLocaleString('pt-BR')}),350));
- const txt=JSON.stringify(Object.assign({id:S.id},body));
- return fetch(SCRIPT_URL,{method:'POST',body:txt,keepalive:txt.length<60000}).then(r=>r.json())}
-function enfileira(body){pend++;status('Salvando…','wait');
- const p=fila.then(()=>post(Object.assign({dados:dados()},body))).then(j=>{if(!j.ok)throw new Error(j.erro||'Falha');if(j.proto)S.proto=j.proto;return j})
-  .finally(()=>{pend--;});
- fila=p.then(()=>{if(!pend)status('✓ Salvo')},()=>{status('Sem conexão. Vamos tentar de novo','err')});
- return p}
-function salvarEtapa(){if(!S.id)return;enfileira({}).catch(()=>{});guardarLocal()}
+ const txt=JSON.stringify(Object.assign({id:S.id,dados:dados()},body));let ctl=null;try{ctl=new AbortController()}catch(_){}
+ const t=setTimeout(()=>ctl&&ctl.abort(),ms);
+ return fetch(SCRIPT_URL,{method:'POST',body:txt,signal:ctl?ctl.signal:undefined}).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.erro||'Falha');if(j.proto)S.proto=j.proto;return j}).finally(()=>clearTimeout(t))}
+/* salva só a versão mais recente; nunca acumula fila */
+function salvarEtapa(){if(!S.id||fechando)return;sujo=true;guardarLocal();if(!emVoo)disparar()}
+function disparar(){sujo=false;status('Salvando…','wait');
+ emVoo=post({}).then(()=>{if(!sujo)status('✓ Salvo')},()=>status('Sem conexão. Tentaremos de novo','err')).finally(()=>{emVoo=null;if(sujo&&!fechando)disparar()})}
+/* fotos: uma de cada vez, em fila própria */
+function enfileiraArq(body){status('Enviando foto…','wait');const p=filaArq.then(()=>post(body,90000));filaArq=p.catch(()=>{});p.then(()=>status('✓ Salvo'),()=>status('Foto não enviada','err'));return p}
 function dados(){const a=A();const sk=a.pulou;
  const aumento=a.aumento==='Sim'?Object.keys(a.eq).map(e=>{if(e==='Carro elétrico'){const k=evKwh();return `Carro elétrico: ${a.ev.modelo||'modelo não informado'}, ${a.ev.recargas} recargas/mês${k?' (≈'+k+' kWh/mês)':''}`}
   const m=a.eq[e];return `${e==='Outro'?(m.nome||'Outro'):e}: ${m.qtd} un.${+m.t>0?', '+m.t+' h por '+m.per:''}`}).join('; ')||'Sim':(a.aumento||'');
@@ -449,7 +450,7 @@ function listaDe(grupo){const a=A();if(grupo==='conta')return a.contas;if(grupo=
 async function subir(grupo,item,rot){item.status='wait';render(false);
  if(!item.data){const r=await encolher(item.file);if(!r){item.status='erro';render(false);return}item.data=r.data;item.thumb=item.thumb||r.thumb}
  if(item.data.length*0.75>10*1048576){item.status='erro';render(false);toast('Arquivo muito grande. Envie uma foto.');return}
- try{await enfileira({arquivos:[{grupo:grupo.startsWith('imovel')?'imovel':grupo,rotulo:rot||'',data:item.data}]});item.status='ok';delete item.data;delete item.file}
+ try{await enfileiraArq({arquivos:[{grupo:grupo.startsWith('imovel')?'imovel':grupo,rotulo:rot||'',data:item.data}]});item.status='ok';delete item.data;delete item.file}
  catch(e){item.status='erro'}render(false);guardarLocal()}
 
 /* ===== navegação ===== */
@@ -464,9 +465,12 @@ function checar(){coletar();const v=V[S.step];if(!v.ok)return true;let r=v.ok(A(
  if(r&&f){const x=document.getElementById(f);if(x){x.setAttribute('aria-invalid','true');x.setAttribute('aria-describedby','e');x.focus()}}else if(r&&e)e.scrollIntoView({block:'center',behavior:'smooth'});
  return !r}
 async function finalizar(){const b=document.getElementById('go')||document.querySelector('[data-final]');if(b){b.disabled=true;b.textContent='Enviando…'}
- try{await fila.catch(()=>{});const j=await enfileira({acao:'finalizar',website:(document.getElementById('website')||{}).value||''});
+ const pendFoto=[A().contas,A().fotoTelhado,...A().imoveis.map(m=>m.files)].some(l=>l.some(f=>f.status==='wait'));
+ if(pendFoto&&b)b.textContent='Terminando de enviar a foto…';
+ try{fechando=true;await filaArq;if(b)b.textContent='Enviando…';status('Enviando…','wait');
+  const j=await post({acao:'finalizar',website:(document.getElementById('website')||{}).value||''});
   S.proto=j.proto||S.proto;S.quando=j.quando||new Date().toLocaleString('pt-BR');S.finalizado=true;limparLocal();S.hist=[];ir('fim',false)}
- catch(err){if(b){b.disabled=false;b.textContent='Tentar de novo'}const e=document.getElementById('e');const msg=(err&&err.message&&!/fetch|network|json|load/i.test(err.message))?err.message:'Não conseguimos enviar. Confira sua internet e toque em "Tentar de novo".';
+ catch(err){fechando=false;if(b){b.disabled=false;b.textContent='Tentar de novo'}status('Não enviado','err');const e=document.getElementById('e');const msg=(err&&err.message&&!/fetch|network|json|load/i.test(err.message))?err.message:'Não conseguimos enviar. Confira sua internet e toque em "Tentar de novo".';
   if(e){e.hidden=false;e.innerHTML='⚠ '+esc(msg)+` <a href="https://wa.me/${WHATS}" target="_blank" rel="noopener">Ou fale no WhatsApp</a>`}else toast(msg)}}
 
 /* ===== desenho ===== */
